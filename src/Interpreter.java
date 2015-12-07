@@ -78,26 +78,27 @@ public class Interpreter {
         }
     }
 
+    private int term() throws Exception {
+        Token token = this.currentToken;
+        this.eat(TokenType.INTEGER);
+        return Integer.parseInt(token.getValue());
+    }
+
     public String expr() throws Exception {
         currentToken = getNextToken();
-        Token left = currentToken;
-        eat(TokenType.INTEGER);
 
-        Token op = currentToken;
-        if(op.getType()==TokenType.PLUSE) {
-            eat(TokenType.PLUSE);
-        }else{
-            eat(TokenType.MINUS);
-        }
+        int result = this.term();
 
-        Token right = currentToken;
-        eat(TokenType.INTEGER);
-
-        int result;
-        if(op.getType()==TokenType.PLUSE){
-            result = Integer.parseInt(left.getValue()) + Integer.parseInt(right.getValue());
-        }else{
-            result = Integer.parseInt(left.getValue()) - Integer.parseInt(right.getValue());
+        while(this.currentToken.getType()==TokenType.PLUSE || this.currentToken.getType()==TokenType.MINUS){
+            Token token = this.currentToken;
+            if(token.getType()==TokenType.PLUSE){
+                this.eat(TokenType.PLUSE);
+                result += this.term();
+            }
+            else if(token.getType()==TokenType.MINUS){
+                this.eat(TokenType.MINUS);
+                result -= this.term();
+            }
         }
 
         return Integer.toString(result);

@@ -8,8 +8,8 @@ public class Main {
         while (true){
             System.out.println("calc> ");
             String text = sc.nextLine();
-            Interpreter interpreter = new Interpreter(text);
             try {
+                Interpreter interpreter = new Interpreter(text);
                 result = interpreter.expr();
                 System.out.println(result);
             } catch (Exception e) {
